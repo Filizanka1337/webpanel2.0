@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Webowy</title>
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        .header {
+            color: #FF0000;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .run-as-root {
+            color: #00BFFF;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <pre>
+         ▄     ▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄    ▄▄▄▄▄▄▄ ▄▄▄▄▄▄ ▄▄    ▄ ▄▄▄▄▄▄▄ ▄▄▄        ▄▄▄▄▄▄▄      ▄▄▄▄▄▄▄ 
+        █ █ ▄ █ █       █  ▄    █  █       █      █  █  █ █       █   █      █       █    █  ▄    █
+        █ ██ ██ █    ▄▄▄█ █▄█   █  █    ▄  █  ▄   █   █▄█ █    ▄▄▄█   █      █▄▄▄▄   █    █ █ █   █
+        █       █   █▄▄▄█       █  █   █▄█ █ █▄█  █       █   █▄▄▄█   █       ▄▄▄▄█  █    █ █ █   █
+        █       █    ▄▄▄█  ▄   █   █    ▄▄▄█      █  ▄    █    ▄▄▄█   █▄▄▄   █ ▄▄▄▄▄▄█▄▄▄ █ █▄█   █
+        █   ▄   █   █▄▄▄█ █▄█   █  █   █   █  ▄   █ █ █   █   █▄▄▄█       █  █ █▄▄▄▄▄█   ██       █
+        █▄▄█ █▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█  █▄▄▄█   █▄█ █▄▄█▄█  █▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█  █▄▄▄▄▄▄▄█▄▄▄██▄▄▄▄▄▄▄█
+        </pre>
+    </div>
+
+    <p class="run-as-root">Run as root</p>
+    <p style="color: #00BFFF; font-size: 16px;">Komendy:</p>
+    <ul style="color: #00BFFF; font-size: 16px; list-style-type: none; padding: 0;">
+        <li><b>list:</b> Wyświetla dostępne komendy.</li>
+        <li><b>help:</b> Wyświetla pomoc.</li>
+    </ul>
+
+    <pre id="output"></pre>
+    <form id="commandForm">
+        <label for="commandInput">Wprowadź komendę:</label>
+        <input type="text" id="commandInput" name="commandInput" required>
+        <button type="submit">Wykonaj</button>
+    </form>
+
+    <script>
+        const outputElement = document.getElementById('output');
+        const commandForm = document.getElementById('commandForm');
+        const commandInput = document.getElementById('commandInput');
+
+        commandForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const userInput = commandInput.value.trim().toLowerCase();
+            commandInput.value = '';
+
+            if (userInput === 'exit') {
+                window.close();
+            } else {
+                fetch(`/execute?command=${userInput}`)
+                    .then(response => response.text())
+                    .then(data => {
+                        outputElement.innerHTML += data + '\n';
+                        outputElement.scrollTop = outputElement.scrollHeight;
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
